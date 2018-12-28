@@ -15,7 +15,11 @@ def runBatchN(n):
 
     for index, data in df.iterrows():
         sdoku, soln = getTestCase(testInstance = data["puzzle"], solution = data["solution"])
-        fin, time = solve(sdoku)
+
+        try:
+            (fin, time) = solve(sdoku)
+        except Exception as e:
+            pass
 
         if (fin - soln == 0).all():
             correct += 1

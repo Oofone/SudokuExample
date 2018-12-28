@@ -120,7 +120,7 @@ def solve(array, verbose = False):
         if round >100:
             if verbose:
                 print "Unfortunately this puzzle could not be solved, returning partially solved array"
-            return arr
+            return (arr, nettime)
 
         if verbose:
             print "Sudoku not yet solved"
