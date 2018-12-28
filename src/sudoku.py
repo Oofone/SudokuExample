@@ -1,26 +1,30 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from utils.datasetutils import getRandomCase
+
+import sys
 import numpy as np
 import time
 
 boxmap = {0:0,1:0,2:0,3:1,4:1,5:1,6:2,7:2,8:2}
 
-def getTestCase():
-    testInstance = "004300209005009001070060043006002087190007400050083000600000105003508690042910300"
+def getTestCase(testInstance = None, solution = None):
+    if not (testInstance or solution):
+        testInstance, solution = getRandomCase()
+
     assert len(testInstance) == 9*9
+    assert len(solution) == 9*9
 
-    sudoku = []
-    count = 1
-    while count <= 81:
-        if count % 9 == 0:
-            arr = []
-            for i in range(count - 9, count):
-                arr.append(int(testInstance[i]))
-            sudoku.append(arr)
-        count += 1
+    sudoku = list(testInstance)
+    soln = list(solution)
 
-    arr = np.array(sudoku)
-    return arr
+    sudoku = np.array(sudoku, np.int)
+    soln = np.array(soln, np.int)
+
+    sudoku = sudoku.reshape((9,9))
+    soln = soln.reshape((9,9))
+
+    return sudoku, soln
 
 def sumToN(n):
     return (n * (n + 1)) / 2
@@ -131,14 +135,6 @@ def solve(array, verbose = False):
         round += 1
 
     if verbose:
-        print "Total time taken: " + str(nettime)
+        print "Total time taken: " + str(nettime) + " seconds"
 
-    return arr
-
-def main():
-    print "Solving a random test-case"
-    arr = getTestCase()
-    print solve(arr, verbose = True)
-
-if __name__ == '__main__':
-    main()
+    return (arr, nettime)
