@@ -1,27 +1,30 @@
 # -*- coding: utf-8 -*-
-from utils.datasetutils import loadBatchN
-from src.sudoku get getTestCase, solve
+from utils.datasetutils import loadBatchN, BATCH_SIZE
+from src.sudoku import getTestCase, solve
+
+import numpy as np
+import sys
 
 def runBatchN(n):
     df = loadBatchN(n)
 
-    total_length = 200000
+    total_length = BATCH_SIZE
     dl = 0
     correct = 0
-    netttime = 0
+    nettime = 0
 
-    for data in df.iterrows():
+    for index, data in df.iterrows():
         sdoku, soln = getTestCase(testInstance = data["puzzle"], solution = data["solution"])
         fin, time = solve(sdoku)
 
-        if np.array_equal(fin, soln):
+        if (fin - soln == 0).all():
             correct += 1
         nettime += time
 
         dl += 1
         done = int(50 * dl / total_length)
-        sys.stdout.write("\r[%s%s]" % ('=' * done, ' ' * (50-done)) )
+        sys.stdout.write("\r[%s%s] \t[%s]" % ('=' * done, ' ' * (50-done) , (str(dl) + " completed of " + str(BATCH_SIZE) + " examples")))
         sys.stdout.flush()
 
-    print "Accuracy: " + str((float(correct) / 200000.0) * 100) + "%"
+    print "\nAccuracy: " + str((float(correct) / BATCH_SIZE) * 100) + "%"
     print "Time Taken in Minutes: " + str(float(nettime)/60.0)

@@ -1,7 +1,7 @@
 import pandas as pd
 import random
 
-from definitions import ROOT_DIR
+from definitions import ROOT_DIR, BATCH_SIZE
 
 def getRandomCase():
     row = random.randint(1, 1000000)
@@ -9,5 +9,5 @@ def getRandomCase():
     return tuple(df.iloc[0])
 
 def loadBatchN(n):
-    df = pd.read_csv(ROOT_DIR+"/dataset/sudoku.csv", skiprows=(n*200000) - 1, nrows=200000, names=['puzzle','solution'])
+    df = pd.read_csv(ROOT_DIR+"/dataset/sudoku.csv", skiprows=(n*BATCH_SIZE) - 1, nrows=BATCH_SIZE, names=['puzzle','solution'])
     return df
